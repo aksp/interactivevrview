@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VR View - changing orientations</title>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script> 
+    <!-- This library ^ lets you use jquery slider UI with mobile, but neither work well -->
+
+    <style type="text/css">
+      .btn {
+        margin-left: 40px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <div id="vrview"></div>
+
+    <div id="controls">
+      <div id="toggleplay" class="paused"></div>
+      <div id="togglemute"></div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div id="slider" style="margin-top:-25px"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1 col-md-offset-2">
+          <textarea rows="1" cols="10" id="currentTime">0</textarea>
+        </div>
+        <div class="col-md-6">
+          <textarea id="spec-composer" style="width:100%" hidden></textarea>
+        </div>
+      </div>
+
+      <div class="row" id="study-info">
+        <br>
+        <div class="col-md-2 col-md-offset-2">
+          <h4 id="study-i" style="display:inline"></h4>
+        </div>
+        <div class="col-md-2">
+          <h4 id="video-title" style="display:inline"></h4>
+        </div>
+        <div class="col-md-2">
+          <h4 id="condition" style="display:inline"></h4>
+        </div>
+        <div class="col-md-2" id="study-button-div">
+        </div>
+      </div>
+
+      <div class="row" id="button-row-1">
+        <br>
+        <div class="col-md-3 col-md-offset-2">
+            <button id="toggleorientation" class="btn btn-default btn-small">Switch viewpoint</button>
+        </div>
+        <div class="col-md-3">
+            <button id="toggleforcedcuts" class="btn btn-default btn-small">Switch to forced cuts</button>
+        </div>
+        <div class="col-md-3">
+            <button id="togglesubtitles" class="btn btn-default btn-small">Turn on subtitles</button>
+        </div>
+      </div>
+
+      <div class="row" id="button-row-2">
+        <div class="col-md-3 col-md-offset-2">
+            <button id="toggleorientationpause" class="btn btn-default btn-small">Turn on orientation pause</button>
+        </div>
+
+        <div class="col-md-3">
+            <button id="toggleorientationvideochange" class="btn btn-default btn-small">Turn on orientation video change</button>
+        </div>
+      </div>
+      
+      <div class="row" id="button-row-3">
+        <div class="col-md-3 col-md-offset-2">
+            <button id="togglepauseshotchange" class="btn btn-default btn-small">Turn on pause shot change</button>
+        </div>
+
+        <div class="col-md-3">
+            <button id="togglehistoryshotchange" class="btn btn-default btn-small">Turn on history shot change</button>
+        </div>
+      </div>
+
+      <div class="row" id="button-row-4">
+        <div class="col-md-3 col-md-offset-2">
+            <button id="toggleregularcuts" class="btn btn-default btn-small">Turn on regular cuts</button>
+        </div>
+
+        <div class="col-md-3">
+            <button id="toggleregulartitles" class="btn btn-default btn-small disabled">Turn on regular titles</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- will load fake video player to get duration -->
+        <div id="fake-video-player"></div>
+      </div>
+    </div>
+
+    <script src="../../build/vrview.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

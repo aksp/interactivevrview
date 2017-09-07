@@ -1,0 +1,12 @@
+{
+    "0001": [
+        "http://localhost/~apavel/360-video-project/interactivevrview/examples/interactivevideo/index.html?f=demo-spec-files/trees.json&times=100-150&study=true&opts=regularcuts&participantID=0001&study_json=demo.json&study_i=0", 
+        "http://localhost/~apavel/360-video-project/interactivevrview/examples/interactivevideo/index.html?f=demo-spec-files/trees.json&times=100-150&study=true&opts=optionalcuts&participantID=0001&study_json=demo.json&study_i=1", 
+        "http://localhost/~apavel/360-video-project/interactivevrview/examples/interactivevideo/index.html?f=demo-spec-files/trees.json&times=100-150&study=true&opts=forcedcuts&participantID=0001&study_json=demo.json&study_i=2"
+    ],
+    "0002": [
+        "http://localhost/~apavel/360-video-project/interactivevrview/examples/interactivevideo/index.html?f=demo-spec-files/trees.json&times=100-150&study=true&opts=regularcuts&participantID=0002&study_json=demo.json&study_i=0", 
+        "http://localhost/~apavel/360-video-project/interactivevrview/examples/interactivevideo/index.html?f=demo-spec-files/trees.json&times=100-150&study=true&opts=optionalcuts&participantID=0002&study_json=demo.json&study_i=1", 
+        "http://localhost/~apavel/360-video-project/interactivevrview/examples/interactivevideo/index.html?f=demo-spec-files/trees.json&times=100-150&study=true&opts=forcedcuts&participantID=0002&study_json=demo.json&study_i=2"
+    ]
+}

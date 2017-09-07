@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Interactive 360 player</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <h1>Interactive 360 Player</h1>
+      <p class="lead">Demonstration of 360 video player enabling shot orientation controls for interactive cinematography</p>
+
+      <h3>Player options</h3>
+      <p>Select a video title, select a technique for viewing the video, and then click "open player" to load the video player.</p>
+
+      <div class="row">
+        <div class="col-sm-2">Select a video:</div>
+        <div class="col-sm-10">
+          <div class="dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="video-selection" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Default video name
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="video-selection" id="video-selection-menu">
+            </ul>
+          </div>
+        </div> <!-- end drop down -->
+      </div> <!-- end video select row -->
+
+      <div class="row">
+        <div class="col-sm-2">Select a technique:</div>
+        <div class="col-sm-10">
+          <div class="dropdown">
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="technique-selection" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Default video name
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="technique-selection" id="technique-selection-menu">
+            </ul>
+          </div>
+        </div> <!-- end drop down -->
+      </div> <!-- end video select row -->
+
+      <div class="row">
+        <div class="col-sm-2">
+          <button class="btn btn-sm btn-default" id="start-player">Open player</button>
+        </div>
+      </div>
+
+      <br>
+      <h3>Specifications</h3>
+      <p>The interactive 360 video player works on desktop, mobile and mobile with Google Cardboard. Tested requirements listed below (it may work with different conditions, but probably not). 
+      <ul>
+        <li>Desktop/laptop: Chrome 57.0+ or Safari 10.0.3+ tested on a Mac</li>
+        <li>Mobile: iOS 10.2.1 with iPhone 6s or higher with up-to-date Safari or Chrome </li>
+        <li>Cardboard: Any cardboard player with a button on the top (i.e. Google Cardboard V2) instead of a magnet on the side</li>
+      </ul>
+      Our interactive 360 video player is built on top of the <a href="https://developers.google.com/vr/concepts/vrview-web">VRView player</a> by Google. </p>
+
+      <h3>Techniques</h3>
+      <p>
+        <ul>
+          <li><b>Fixed-orientation cuts:</b> Standard 360 video playback (like YouTube)</li>
+          <li><b>Viewpoint-oriented cuts:</b> Plays back the video, and on shot boundaries (cuts) reorients the shot so that the important point is in front of the user</li>
+          <li><b>Active reorientation:</b> Same as fixed-orientation cuts but the user can press a button to reorient the shot so that the important point is in front of the user. Also lets users switch between multiple important points.</li>
+          <li><b>Hybrid active/viewpoint cuts:</b> The system plays back the video, and on shot boundaries reorients the shot so that the important point is in front of the user (as in viewpoint-oriented cuts). In addition, users can press a button to reorient the shot so that the important point is in front of the user (as in active reorientation).</li>
+        </ul>
+      </p>
+
+
+      <h3>Video information</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Cut frequency</th>
+            <th>Description</th>
+            <th>Author (YouTube link)</th>
+          </tr>
+        </thead>
+        <tbody id="video-info-body">
+        </tbody>
+      </table>
+      <!-- <h3></h3> -->
+
+
+    </div> <!-- /container -->
+  </body>
+  <script type="text/javascript">
+
+    video_options = {
+      // "Ice art": "spec-files/ice-art-2.json",
+      // "Snowboarding": "spec-files/snowboarding.json",
+      "Surfing": "demo-spec-files/surfing.json",
+      "Volcano": "demo-spec-files/volcano.json",
+      // "HPO Preview": "spec-files/hpo-preview.json",
+      "Knives": "spec-files/knives.json",
+      "Trees": "demo-spec-files/trees.json",
+      "Dining at the met": "demo-spec-files/dining-at-the-met.json",
+      "Invasion": "demo-spec-files/invasion.json",
+    };
+
+    video_info = {
+      "Invasion": {
+        "author": "Baobab studios", 
+        "link": "https://www.youtube.com/watch?v=gPUDZPWhiiE",
+        "cut-frequency": "low",
+        "domain": "animated fictional story"
+      },
+      "Surfing": {
+        "author": "GoPro", 
+        "link": "https://www.youtube.com/watch?v=MKWWhf8RAV8",
+        "cut-frequency": "low",
+        "domain": "sports"
+      },
+      "Volcano": {
+        "author": "Red Bull", 
+        "link": "https://www.youtube.com/watch?v=OBp2EWPjotk",
+        "cut-frequency": "medium",
+        "domain": "adventure"
+      },
+      "Trees": {
+        "author": "National Geographic", 
+        "link": "https://www.youtube.com/watch?v=f7wTolIlK_s",
+        "cut-frequency": "medium",
+        "domain": "adventure"
+      },
+      "Dining at the met": {
+        "author": "New York Times",
+        "link": "https://www.youtube.com/watch?v=aw2wBm83Uo8",
+        "cut-frequency": "medium",
+        "domain": "news short"
+      },
+      "Knives": {
+        "author": "Adam Cusco",
+        "link": "http://adamcosco.com/short-films/#",
+        "cut-frequency": "high",
+        "domain": "live fictional story"
+      },
+      "HPO Preview": {
+        "author": "Huffington Post",
+        "link": "https://www.youtube.com/watch?v=oyS1YMd7R-E",
+        "cut-frequency": "high",
+        "domain": "news trailer"
+      },
+      "Ice art": {
+        "author": "New York Times",
+        "link": "https://www.nytimes.com/video/world/asia/100000004868768/a-chilly-walk-amid-chinas-ice-art.html",
+        "cut-frequency": "medium",
+        "domain": "news short"
+      },
+      "Snowboarding": {
+        "author": "GoPro",
+        "link": "https://www.youtube.com/watch?v=0wC3x_bnnps",
+        "cut-frequency": "medium",
+        "domain": "sports"
+      }
+    };
+
+    for (var i = 0; i < Object.keys(video_info).length; i++) {
+      var key = Object.keys(video_info)[i];
+
+      var tr = $('<tr>');
+      
+      var td_title = $('<th>').attr("scope", "row").text(key);
+      var td_cut_frequency = $('<td>').text(video_info[key]["cut-frequency"]);
+      var td_domain = $('<td>').text(video_info[key]["domain"]);
+      
+      var td_link = $('<td>');
+      var a_link = $('<a>').attr("href", video_info[key]["link"]).text(video_info[key]["author"]);
+      td_link.append(a_link);
+
+      tr.append(td_title);
+      tr.append(td_cut_frequency);
+      tr.append(td_domain);
+      tr.append(td_link);
+
+      $('#video-info-body').append(tr);
+    };
+
+    technique_options = {
+      "Fixed-orientation cuts": "regularcuts",
+      "Viewpoint-oriented cuts": "forcedcuts",
+      "Active reorientation": "optionalcuts",
+      "Hybrid active/viewpoint cuts": "hybridcuts"
+    };
+
+    default_video_name = "Surfing";
+    default_technique_name = "Fixed-orientation cuts";
+
+    current_technique = default_technique_name;
+    current_video = default_video_name;
+
+    // Populate dropdown menus
+    function populateDropdown($dropdown, options) {
+      var keys = Object.keys(options);
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var option = options[key];
+        var $li = $("<li>");
+        var $a = $("<a>").attr("href", "#").attr("data-value", option).text(key);
+        $li.append($a);
+        $dropdown.append($li);
+      };
+    }
+
+    $('#technique-selection').html(current_technique+' <span class="caret"></span>');
+    $('#video-selection').html(current_video+ ' <span class="caret"></span>');
+
+    populateDropdown($('#technique-selection-menu'), technique_options);
+    populateDropdown($('#video-selection-menu'), video_options);
+
+    $(".dropdown-menu li a").click(function(){
+        var $btn = $(this).parents(".dropdown").find('.btn');
+        $btn.html($(this).text() + ' <span class="caret"></span>');
+        // $btn.val($(this).data('value'));
+        $btn.attr("data-value", $(this).attr('data-value'));
+
+        var key = $(this).text();
+        if (Object.keys(technique_options).indexOf(key) > -1) {
+          current_technique = key;
+          console.log("Updated technique: " + current_technique);
+        } else {
+          current_video = key;
+          console.log("Updated video: " + current_video);
+        }
+      });
+
+    $("#start-player").on("click", function(){
+      var root = window.location.href.split("orientations/")[0] + "orientations/demo.html";
+      var s = "?f=" + video_options[current_video]; 
+      var t = "&opts=" + technique_options[current_technique];
+      window.location.href = root + s + t;
+    }); 
+
+  </script>
+</html>

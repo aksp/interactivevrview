@@ -1,0 +1,52 @@
+[
+  {
+    "time": 1504810246376,
+    "interaction": "setupStudyRecording",
+    "videoTime": 0,
+    "value": "meow"
+  },
+  {
+    "time": 1504810247030,
+    "interaction": "noCutPerformed",
+    "videoTime": 0.007228
+  },
+  {
+    "time": 1504810247069,
+    "interaction": "seek",
+    "videoTime": 0.007228,
+    "value": 100
+  },
+  {
+    "time": 1504810247069,
+    "interaction": "seekToStartTime",
+    "videoTime": 0.007228,
+    "value": 100
+  },
+  {
+    "time": 1504810247099,
+    "interaction": "noCutPerformed",
+    "videoTime": 100
+  },
+  {
+    "time": 1504810248590,
+    "interaction": "play",
+    "videoTime": 100,
+    "value": 100
+  },
+  {
+    "time": 1504810256040,
+    "interaction": "noCutPerformed",
+    "videoTime": 107.386834
+  },
+  {
+    "time": 1504810258658,
+    "interaction": "pause",
+    "videoTime": 110.004087,
+    "value": 110.004087
+  },
+  {
+    "time": 1504810258658,
+    "interaction": "stoppedPlayAutomatically",
+    "videoTime": 110.004087
+  }
+]

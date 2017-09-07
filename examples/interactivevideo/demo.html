@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VR View - changing orientations</title>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script> 
+    <!-- This library ^ lets you use jquery slider UI with mobile, but neither work well -->
+
+    <style type="text/css">
+    </style>
+
+  </head>
+  <body>
+
+    <div class="container">
+      <h3 id="technique-title">Active reorientation</h3>
+
+      <div class="row">
+        <div class="col-md-6">
+            <div id="vrview"></div>
+            <div id="controls">
+              <div id="toggleplay" class="paused"></div>
+              <div id="togglemute"></div>
+            </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+          <div id="slider" style="margin-top:-25px"></div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-1">
+          <button class="btn btn-default" id="toggleorientation">Switch viewpoint</button>
+        </div>
+      </div>
+      
+
+      <div class="row">
+        <div class="col-md-1 col-md-offset-2">
+          <textarea rows="1" cols="10" id="currentTime">0</textarea>
+        </div>
+        <div class="col-md-6">
+          <textarea id="spec-composer" style="width:100%" hidden></textarea>
+        </div>
+      </div>
+
+      <div class="row" id="study-info">
+        <br>
+        <div class="col-md-2 col-md-offset-2">
+          <h4 id="study-i" style="display:inline"></h4>
+        </div>
+        <div class="col-md-2">
+          <h4 id="video-title" style="display:inline"></h4>
+        </div>
+        <div class="col-md-2">
+          <h4 id="condition" style="display:inline"></h4>
+        </div>
+        <div class="col-md-2" id="study-button-div">
+        </div>
+      </div>
+
+      <div class="row" id="button-row-1">
+        <br>
+<!--         <div class="col-md-3 col-md-offset-2">
+            <button id="toggleorientation" class="btn btn-default btn-small">Switch viewpoint</button>
+        </div> -->
+        <div class="col-md-3">
+            <button id="toggleforcedcuts" class="btn btn-default btn-small">Switch to forced cuts</button>
+        </div>
+        <div class="col-md-3">
+            <button id="togglesubtitles" class="btn btn-default btn-small">Turn on subtitles</button>
+        </div>
+      </div>
+
+      <div class="row" id="button-row-2">
+        <div class="col-md-3 col-md-offset-2">
+            <button id="toggleorientationpause" class="btn btn-default btn-small">Turn on orientation pause</button>
+        </div>
+
+        <div class="col-md-3">
+            <button id="toggleorientationvideochange" class="btn btn-default btn-small">Turn on orientation video change</button>
+        </div>
+      </div>
+      
+      <div class="row" id="button-row-3">
+        <div class="col-md-3 col-md-offset-2">
+            <button id="togglepauseshotchange" class="btn btn-default btn-small">Turn on pause shot change</button>
+        </div>
+
+        <div class="col-md-3">
+            <button id="togglehistoryshotchange" class="btn btn-default btn-small">Turn on history shot change</button>
+        </div>
+      </div>
+
+      <div class="row" id="button-row-4">
+        <div class="col-md-3 col-md-offset-2">
+            <button id="toggleregularcuts" class="btn btn-default btn-small">Turn on regular cuts</button>
+        </div>
+
+        <div class="col-md-3">
+            <button id="toggleregulartitles" class="btn btn-default btn-small disabled">Turn on regular titles</button>
+        </div>
+      </div>
+
+      <div id="demo-instructions">
+        
+        <div class="row" id="desktop-instructions">
+          <div class="col-sm-8">
+            <h4>Desktop/laptop instructions</h4>
+            <ul>
+              <li><b>Play</b>: Click the play/pause button, and you can seek using the timeline (make the window larger if the timeline is occluding the play/pause button).</li>
+              <li><b>Rotate scene</b>: Click and drag over the video player.</li>
+              <li><b>Fullscreen</b>: Click fullscreen icon in bottom right of the video player.</li>
+              <li><b>Active reorientation and hybrid modes only</b>: While viewing the video, rotate the scene to the important point in the shot by pressing the "Switch Viewpoint" button.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row" id="mobile-instructions">
+          <div class="col-sm-8">
+            <h4>Mobile instructions</h4>
+            First, open this page on your mobile phone and click the fullscreen icon on the video player. Then, turn the phone so that it is horizontal to the ground.
+            <ul>
+              <li><b>Play</b>: Tap the top-middle of the horizontal screen.</li>
+              <li><b>Rotate scene</b>: Change the orientation of the phone.</li>
+              <li><b>Active reorientation and hybrid modes only</b>: While viewing the video, rotate the scene to the important point in the shot by tapping the top-middle of the horizontal screen.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row" id="cardboard-instructions">
+          <div class="col-sm-8">
+            <h4>Mobile w/ cardboard instructions</h4>
+            First, open this page on your mobile phone and then click the cardboard button in the bottom right hand corner of the video player. Put the phone in the cardboard player. 
+            <ul>
+              <li><b>Play</b>: Press the cardboard button</li>
+              <li><b>Rotate scene</b>: Change the orientation of the cardboard player.</li>
+              <li><b>Active reorientation and hybrid modes only</b>: While viewing the video, rotate the scene to the important point in the shot by pressing the cardboard button.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <!-- will load fake video player to get duration -->
+        <div id="fake-video-player"></div>
+      </div>
+    </div>
+
+    <script src="../../build/vrview.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
