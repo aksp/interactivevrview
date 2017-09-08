@@ -1,8 +1,10 @@
 Running the interactive 360 video player
 =======
-* Download the repo by 
+First, clone the repo. 
 
+Next, you'll need a simple webserver. At a minimum it should support partial range requests (e.g., to support seek by loading only part of the video at a time). You can see if a server supports partial range requests by following these instructions: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests#Checking_if_a_server_supports_partial_requests>. Node's http-server does support partial range requests, but Python's SimpleHTTPServer does not. To run the interactive video player using Node's http-server, cd into the repo directory, then type "npm install http-server -g" to install the server, and then type "http-server" to run the server. 
 
+However, http-server does not support POST requests. If you would like to record and save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server (a local Apache web server works great) so that save_results.php can save the viewing session to a filepath. 
 
 API calls
 =======
@@ -13,7 +15,7 @@ If you would like to edit this player to add additional functionality, you may w
 These API calls in this repo were implemented in the original Google VRView player (for additional API info see here: <https://developers.google.com/vr/concepts/vrview-web>): 
 * vrview = new VRView.Player("ID", {video: 'link/to/video.mp4', is_stereo: false}) -- Creates the vrview player
 * vrview.play() -- Plays the video
-* vrview.pause() -- Pauses the video
+* vrview.pause() -- Pauses the video 
 
 New API calls for this project, these calls will work for desktop and cardboard/mobile: 
 * vrview.setOrientation(_y-axis-rotation-in-radians_) -- Sets current camera orientation by rotating camera around y axis 
