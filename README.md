@@ -1,4 +1,6 @@
-This repo contains code for the project Shot Orientation Controls for Interactive 360 Degree Cinematography. See the project page (here)[https://aksp.github.io/interactive360video/].
+This repo contains code for the project Shot Orientation Controls for Interactive 360 Degree Cinematography. See the project page [here](https://aksp.github.io/interactive360video/).
+
+If you have any questions about the repo or project contact Amy Pavel at amypavel@berkeley.edu.
 
 Running the interactive 360 video player
 =======
