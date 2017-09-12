@@ -2,9 +2,18 @@ Running the interactive 360 video player
 =======
 First, clone the repo. 
 
-Next, you'll need a simple webserver. At a minimum it should support partial range requests (e.g., to support seek by loading only part of the video at a time). You can see if a server supports partial range requests by following these instructions: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests#Checking_if_a_server_supports_partial_requests>. Node's http-server does support partial range requests, but Python's SimpleHTTPServer does not. To run the interactive video player using Node's http-server, cd into the repo directory, then type "npm install http-server -g" to install the server, and then type "http-server" to run the server. 
+Next, you'll need a simple webserver. At a minimum it should support partial range requests (e.g., to support seek by loading only part of the video at a time). You can see if a server supports partial range requests by following [these instructions](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests#Checking_if_a_server_supports_partial_requests).
 
-However, http-server does not support POST requests. If you would like to record and save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server (a local Apache web server works great) so that save_results.php can save the viewing session to a filepath. 
+Node's [http-server](https://www.npmjs.com/package/http-server) is an easy-to-install server that supports partial range requests (Python's SimpleHTTPServer does not). To run the interactive 360 video player using Node's http-server:
+* `cd` into the repo directory
+* To install the server enter `npm install http-server -g`
+* Enter `http-server` to run the server
+* Record the address provided (for example 127.0.0.1:8080) 
+* Open a browser window and visit http://127.0.0.1:8080/examples/interactivevideo/interface-demo.html to run the online demo (see [here](https://people.eecs.berkeley.edu/~amypavel/vrview/examples/orientations/interface-demo.html))
+
+The videos will not work quite yet. You will need to make a directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) and add a video titled `trees.mp4` which you can find on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s).
+
+Note: `http-server does` not support POST requests. If you would like to record and save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server (a local Apache web server works well) so that save_results.php can save the viewing session to a filepath. 
 
 API calls
 =======
