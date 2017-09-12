@@ -1,3 +1,5 @@
+This repo contains code for the project Shot Orientation Controls for Interactive 360 Degree Cinematography. See the project page (here)[https://aksp.github.io/interactive360video/].
+
 Running the interactive 360 video player
 =======
 First, clone the repo. 
@@ -9,11 +11,17 @@ Node's [http-server](https://www.npmjs.com/package/http-server) is an easy-to-in
 * To install the server enter `npm install http-server -g`
 * Enter `http-server` to run the server
 * Record the address provided (for example 127.0.0.1:8080) 
-* Open a browser window and visit http://127.0.0.1:8080/examples/interactivevideo/interface-demo.html to run the online demo (see [here](https://people.eecs.berkeley.edu/~amypavel/vrview/examples/orientations/interface-demo.html))
+* Open a browser window and visit `http://127.0.0.1:8080/examples/interactivevideo/interface-demo.html` to run the online demo (see [here](https://people.eecs.berkeley.edu/~amypavel/vrview/examples/orientations/interface-demo.html))
 
-The videos will not work quite yet. You will need to make a directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) and add a video titled `trees.mp4` which you can find on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s).
+The webpage should open, but you will not be able to play a 360 video yet because the videos are not included in this repo. First, make a directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) and add a video titled `trees.mp4` which you can find on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s).
 
 Note: `http-server does` not support POST requests. If you would like to record and save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server (a local Apache web server works well) so that save_results.php can save the viewing session to a filepath. 
+
+Authoring a new interactive 360 degree video
+=======
+After downloading the video `your-video.mp4` and adding it to the folder `interactivevrview/examples/interactivevideo/videos/`, you will need to manually add cuts and important orientations. To do this, you can create the JSON by hand, or use our bare-bones labeling interface.
+
+To use the labeling interface, start the webserver as above and visit `http://your-webserver-address/examples/interactivevideo/index.html?f=videos/your-video.mp4`. Navigate the video by using the timeline or the left and right arrow keys. When you have reached a cut point and you have dragged to an important orientation, press `o` to mark the cut (and the first important orientation). Press `m` to mark subsequent important orientations on the same frame. After you have finished marking cut times and orientations, press `s` to output the JSON to the javascript console. You can copy and paste the outputted JSON string to a file called `interactivevrview/examples/interactivevideo/demo-spec-files/your-video.json`. Then, you can see your video by visiting the relevant demo page directly. For instance, for viewpoint-oriented cuts, visit `http://your-webserver-address/examples/interactivevideo/demo.html?f=demo-spec-files/your-video.json&opts=forcedcuts`. 
 
 API calls
 =======
