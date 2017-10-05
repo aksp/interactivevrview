@@ -8,25 +8,37 @@ First, clone the repo.
 
 Next, you'll need a simple webserver. At a minimum it should support partial range requests (e.g., to support seek by loading only part of the video at a time). You can see if a server supports partial range requests by following [these instructions](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests#Checking_if_a_server_supports_partial_requests). Here are two options:
 
-* Run using NPM: If you already have `npm` then Node's [http-server](https://www.npmjs.com/package/http-server) is an easy-to-install server that supports partial range requests. To run the interactive 360 video player using Node's http-server:
+* **http-server** If you already have `npm` then Node's [http-server](https://www.npmjs.com/package/http-server) is an easy-to-install server that supports partial range requests. To run the interactive 360 video player using Node's http-server:
 	* `cd` into the repo directory
 	* To install the server enter `npm install http-server -g`
 	* Enter `http-server` to run the server
 	* Record the address provided (for example 127.0.0.1:8080) 
 	* Open a browser window and visit http://127.0.0.1:8080/examples/interactivevideo/interface-demo.html to run the online demo (see [here](https://people.eecs.berkeley.edu/~amypavel/vrview/examples/orientations/interface-demo.html))
 
-* If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server.
+* **MAMP**If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server. Add the cloned repo to the `Applications/MAMP/htdocs/' folder and visit 'http://localhost:8888/interactivevrview/examples/interactivevideo/interface-demo.html' to run the demo.
 
-* The demo videos will not work quite yet. To view a video the system needs two items: a specification file to specify cut times and important points, and a corresponding video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json') but it does not contain the required video. To add the video: 
+The videos within the demo will not work yet. To display a video with viewpoint-oriented cuts or active reorientation the system needs two files: a specification file to specify cut times and important points, and a corresponding mp4 video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json') but it does not contain the required corresponding video. To add the video: 
 	* Make this directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) 
 	* Download the trees video that can be found on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s)
 	* Title the video `trees.mp4` and save it to the created video directory 
 
+You can now view the trees demo by selecting "Trees" on the interface-demo.html dropdown, then choosing from any technique (e.g., viewpoint-oriented, active, hybrid, fixed). 
+
 Authoring a new interactive 360 degree video
 =======
-After downloading the video `your-video.mp4` and adding it to the folder `interactivevrview/examples/interactivevideo/videos/`, you will need to manually add cuts and important orientations. To do this, you can create the JSON by hand, or use our bare-bones labeling interface.
+Now that you have the video player up and running you can view any 360 video using the system. To view a video file using the technique, you will need to add the video file to the system, and add a new specification file. 
 
-To use the labeling interface, start the webserver as above and visit `http://your-webserver-address/examples/interactivevideo/index.html?f=videos/your-video.mp4`. Navigate the video by using the timeline or the left and right arrow keys. When you have reached a cut point and you have dragged to an important orientation, press `o` to mark the cut (and the first important orientation). Press `m` to mark subsequent important orientations on the same frame. After you have finished marking cut times and orientations, press `s` to output the JSON to the javascript console. You can copy and paste the outputted JSON string to a file called `interactivevrview/examples/interactivevideo/demo-spec-files/your-video.json`. Then, you can see your video by visiting the relevant demo page directly. For instance, for viewpoint-oriented cuts, visit `http://your-webserver-address/examples/interactivevideo/demo.html?f=demo-spec-files/your-video.json&opts=forcedcuts`. 
+* Add the video ('my-video.mp4') to the server in the folder `interactivevrview/examples/interactivevideo/videos/` 
+* To create a JSON specification file from scratch, use the same format as in 'trees.json' and change the video filenames, the shot times (e.g., "start" and "end" for each shot), and the important points per shot (e.g., "orientations") in order of importance. Add the JSON file to the existing folder `demo-spec-files/'.
+* To create a JSON specification file using our (ugly but functional) labeling interface
+	* Start the webserver as above and visit `http://<webserver-address>/examples/interactivevideo/index.html?f=videos/<my-video.mp4>`. 
+	* Navigate the video by using the timeline or the left and right arrow keys. 
+	* When you have reached a cut point and you have dragged to an important orientation, press `o` to mark the cut (and the first important orientation). 
+	* Press `m` to mark subsequent important orientations on the same frame. 
+	* After you have finished marking cut times and orientations, press `s` to output the JSON to the javascript console. 
+	* You can copy and paste the outputted JSON string to a file called `interactivevrview/examples/interactivevideo/demo-spec-files/<my-video.json>`. 
+
+Then, you can see your video by visiting the relevant demo page directly. For instance, for viewpoint-oriented cuts, visit `http://<webserver-address>/examples/interactivevideo/demo.html?f=demo-spec-files/<my-video.json>&opts=forcedcuts`. 
 
 API calls
 =======
@@ -47,4 +59,4 @@ New API calls for this project, these calls will work for desktop and cardboard/
 * vrview.record("startRecording") -- Starts recording interactions (e.g., play, pause, seek) and camera orientation
 * vrview.record(_filename_) -- Stops recording and saves recording to the file _filename_
 
-To support these API new calls, I've edited the following files in the original API (an old version found here: ): build/embed.js, build/vrview.js, build/three.js
+To support these API new calls, I've edited the following files in the original API: build/embed.js, build/vrview.js, build/three.js
