@@ -4,11 +4,7 @@ var playButton;
 var muteButton;
 var orientationButton;
 var forcedcutsButton;
-var subtitlesButton;
-var historyshotchangeButton;
-var pauseshotchangeButton;
 var regularcutsButton;
-var regulartitlesButton;
 var $nextButton;
 
 var timelineSlider;
@@ -24,16 +20,15 @@ var FRAME_INCREMENT = 0.01;
 var circle_high = Math.PI + Math.PI/2;
 var circle_low = - Math.PI/2;
 
+// Names have changed: 
+// forced cuts == viewpoint-oriented cuts
+// regular cuts == fixed-orientation cuts
+// optional cuts == active reorientation
+// hybrid cuts == viewpoint-oriented cuts + active reorientation
 var url_opts = {
-  subtitles: onToggleSubtitles,
-  regularsubtitles: onToggleRegularTitles,
   forcedcuts: onToggleForcedCuts,
   regularcuts: onToggleRegularCuts,
   hybridcuts: onToggleHybridCuts,
-  onpausecut: onTogglePauseShotChange,
-  onhistorycut: onToggleHistoryShotChange,
-  onorientationchangevideo: onToggleOrientationVideoChange,
-  onorientationpause: onToggleOrientationPause,
 };
 
 // first time play?
@@ -61,7 +56,6 @@ sts = {
   specs: { // specifications for playback
     fn: null,
     mode: "optional_cuts",
-    subtitles: false,
     playback: null,
   },
   timeline: null,
@@ -89,30 +83,6 @@ function getTimestamp(){
   var d = new Date();
   return d.getTime();
 }
-
-// http://stackoverflow.com/a/8273091 by Tadeck
-function range(start, stop, step) {
-    if (typeof stop == 'undefined') {
-        // one param defined
-        stop = start;
-        start = 0;
-    }
-
-    if (typeof step == 'undefined') {
-        step = 1;
-    }
-
-    if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
-        return [];
-    }
-
-    var result = [];
-    for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
-        result.push(i);
-    }
-
-    return result;
-};
 
 var randomId = function() {
   var text = "";
@@ -164,48 +134,6 @@ function seek(t){
   vrView.seek(t);
   recordInteraction("seek", t);
 }
-
-// also needs to be after the first 5 seconds to give people
-// time to get situated
-function pausedLookingAround(){
-  // console.log(sts.theta.current);
-  var t = getTimestamp();
-  var time_diff = t - sts.theta.time_set;
-  if ((time_diff)/1000.0 > sts.cuts.required_time
-    && sts.currentTime > 5.0) {
-     console.log("pausedLookingAround at " + sts.currentTime + ", " + time_diff/1000);
-     return true; 
-  }
-  return false;
-};
-
-function lookedInAllDirections(){
-  var req = range(circle_low, circle_high, FOV_RADIANS*2);
-
-  // http://stackoverflow.com/questions/1295584/most-efficient-way-to-create-a-zero-filled-javascript-array
-  var zeros = Array.apply(null, Array(req.length)).map(Number.prototype.valueOf,0);
-
-  for (var i = 0; i < sts.theta.shot_history.length; i++) {
-    var hist = sts.theta.shot_history[i];
-    var low = req.filter(function(d){return d < hist});
-    if (low.length > 0) {
-      var index = req.indexOf(low[low.length - 1]);
-      zeros[index] = 1;
-    }
-  };
-
-  //console.log(zeros.filter(function(x){return x==1}).length );
-
-  // if we've visited (almost)? every section
-  // console.log(zeros.filter(function(x){return x==1}).length +"/" +zeros.length);
-  if (zeros.filter(function(x){return x==1}).length >= zeros.length) {
-    console.log("looked in all directions");
-    return true;
-
-  }
-  return false;
-};
-
 
 function isMobile() {
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -272,19 +200,6 @@ function outputNewSpec() {
       k++;
     }
 
-    // if (els.length > 1) {
-    //   o1 = parseFloat(els[1]);
-    // } 
-
-    // if (els.length > 2) {
-    //   if (isNaN(els[2])) { // if its not a number, we should assume its all text
-    //     text = els.splice(2,els.length).join(" ");
-    //   } else {
-    //     o2 = parseFloat(els[2]);
-    //     text = els.splice(3,els.length).join(" ");
-    //   }
-    // }
-
     var res = {
       "start": start,
       "orientations": orientations,
@@ -317,12 +232,6 @@ function outputNewSpec() {
       console.log(tt1.orientations);
       out_orientation.orientations = tt1.orientations;
     }
-    // if (tt1.o1 !== undefined) {
-    //   out_orientation.orientations.push(tt1.o1);
-    // } 
-    // if (tt1.o2 !== undefined) {
-    //   out_orientation.orientations.push(tt1.o2);
-    // }
 
     out.orientation.push(out_orientation);
     return out;
@@ -427,13 +336,11 @@ function getIframedocument(){
 function hideOptionalButtons(){
   $(orientationButton).hide();
   $(forcedcutsButton).hide();
-  $(subtitlesButton).hide();
-  $(orientationPauseButton).hide();
-  $(orientationVideoChangeButton).hide();
+  // $(orientationPauseButton).hide();
+  // $(orientationVideoChangeButton).hide();
   $(regularcutsButton).hide();
-  $(regulartitlesButton).hide();
-  $(historyshotchangeButton).hide();
-  $(pauseshotchangeButton).hide();
+  // $(historyshotchangeButton).hide();
+  // $(pauseshotchangeButton).hide();
 
   if (sts.specs.orientationbutton) {
     $(orientationButton).show();
@@ -445,14 +352,8 @@ function addButtons() {
   playButton = document.querySelector('#toggleplay');
   muteButton = document.querySelector('#togglemute');
   orientationButton = document.querySelector('#toggleorientation');
-  orientationPauseButton = document.querySelector('#toggleorientationpause');
-  orientationVideoChangeButton = document.querySelector('#toggleorientationvideochange');
   forcedcutsButton = document.querySelector('#toggleforcedcuts');
-  subtitlesButton = document.querySelector('#togglesubtitles');
-  pauseshotchangeButton = document.querySelector('#togglepauseshotchange');
-  historyshotchangeButton = document.querySelector('#togglehistoryshotchange');
   regularcutsButton = document.querySelector('#toggleregularcuts');
-  regulartitlesButton = document.querySelector('#toggleregulartitles');
   if (sts.specs.nobuttons) {
     hideOptionalButtons();
   }
@@ -463,16 +364,8 @@ function addButtons() {
   playButton.addEventListener('click', onTogglePlay);
   muteButton.addEventListener('click', onToggleMute);
   orientationButton.addEventListener('click', onToggleOrientation);
-  orientationPauseButton.addEventListener('click', onToggleOrientationPause);
-  orientationVideoChangeButton.addEventListener('click', onToggleOrientationVideoChange);
-
-  pauseshotchangeButton.addEventListener('click', onTogglePauseShotChange);
-  historyshotchangeButton.addEventListener('click', onToggleHistoryShotChange);
   regularcutsButton.addEventListener('click', onToggleRegularCuts);
-  regulartitlesButton.addEventListener('click', onToggleRegularTitles);
-
   forcedcutsButton.addEventListener('click', onToggleForcedCuts);
-  subtitlesButton.addEventListener('click', onToggleSubtitles);
 }
 
 function createPlayer(video_fn, stereo) {
@@ -730,24 +623,6 @@ function getPossibleOrientationsWithTimes(){
 
 }
 
-function getPossibleOrientations(){
-  if (sts.specs.playback !== null) {
-
-    // get relevant orientation objects
-    var res = $(sts.specs.playback.orientation).filter(function(){
-      return this.start <= sts.currentTime 
-          && this.end > sts.currentTime;
-    });
-
-    // for each relevant orientation object, append possible orientations
-    var all_orientations = [];
-    for (var i = 0; i < res.length; i++) {
-      all_orientations = all_orientations.concat(res[i].orientations);
-    };
-    return all_orientations;
-  }
-}
-
 // force update the video player orientation
 // to the first possible orientation
 function updateOrientation(){
@@ -822,294 +697,6 @@ function updateShot() {
   }
 }
 
-function thetaToTitleDir(theta) {
-  var l = theta * 180 / Math.PI;
-  l += 180; // weird offset
-  return "0" + ";" + l % 360;
-}
-
-function thetaToTitleLon(theta) {
-  var l = theta * 180 / Math.PI;
-  l += 180; // weird offset
-  return l % 360;
-}
-
-function displayTitle(titleText, theta, r0) {
-  var titles = [];
-  var lon = thetaToTitleLon(theta);
-
-  var lats = [5, 1, -3];
-  // var lats = [10, 3, 2]; 
-
-  if (titleText.indexOf(";") > -1) {
-    titles = titleText.split(";");
-  } else {
-    titles = [titleText];
-  }                                       
-
-  if (titles.length > 0) {
-    for (var i = 0; i < titles.length; i++) {
-      vrView.title(titles[i] + ";" + lats[i] + ";" + lon);
-      sts.subtitle_history.push({
-        "title_mode": true, 
-        "text": titles[i],
-        "start": r0.start,
-        "end": r0.end
-      });
-    };
-  } else {
-    console.log("Titles have a weird length: " + titles.length)
-  }
-}
-
-function updateSubtitle() {
-  // get relevant subtitles
-  var res = $(sts.specs.playback.subtitles).filter(function(){
-      return this.start <= sts.currentTime 
-          && this.end > sts.currentTime;
-  });
-
-  // get subtitles we should delete
-  var to_del = $(sts.subtitle_history).filter(function(){
-    return !(this.start <= sts.currentTime && this.end > sts.currentTime);
-  });
-
-  sts.subtitle_history = $(sts.subtitle_history).filter(function(){
-    return this.start <= sts.currentTime && this.end > sts.currentTime;
-  });
-
-  if (to_del.length > 0) {
-    for (var i = 0; i < to_del.length; i++) {
-      var item = to_del[i];
-      if (item.title_mode) {
-        vrView.title(item.text);
-      } else {
-        vrView.subtitle(item.text);
-      }
-    };
-  }
-
-  if (sts.subtitle_history.length === 0) {
-    sts.current_subtitle = undefined ;
-    sts.current_subtitle_title_mode = undefined ;
-  }
-
-  if (res.length > 0 
-      && res[0] 
-      && res[0].text 
-      && res[0].text !== sts.current_subtitle) {
-
-    var subtitleText = res[0].text ;
-    var isTitleMode = res[0].title_mode ;
-
-    if (isTitleMode && !sts.cuts.regular_titles)  {
-      var theta = sts.theta.current;
-      var title_dir = thetaToTitleDir(theta);
-      displayTitle(subtitleText, theta, res[0]);
-      // vrView.title(subtitleText + ";" + title_dir);
-      // sts.subtitle_history.push(res[0]);
-
-    } else if (isTitleMode && sts.cuts.regular_titles) {
-      var r0 = res[0];
-      var dirs = [-1.047, 1.047, 3.14];
-      for (var i = 0; i < dirs.length; i++) {
-        var dir = dirs[i];
-        displayTitle(r0.text, dir, res[0]);
-        // vrView.title(r0.text+ ";" + thetaToTitleDir(dir));
-        // sts.subtitle_history.push(r0);
-        r0.text += " ";
-      };
-
-    } else {
-      vrView.subtitle(subtitleText); 
-      sts.subtitle_history.push(res[0]);
-    }
-    
-    sts.current_subtitle = subtitleText;
-    sts.current_subtitle_title_mode = res[0].title_mode;
-  }
-}
-
-function setContentOrSeek(params, last_video_fn, next_video_fn) {
-  var lvs = last_video_fn.split("#t=");
-  var last_video_root = lvs[0];
-  var last_video_time = lvs[1];
-
-  var nvs = next_video_fn.split("#t=");
-  var next_video_root = nvs[0];
-  var next_video_time = nvs[1];
-
-  if (next_video_root === last_video_root) {
-    // seek
-    console.log("Seeking instead");
-    seek(next_video_time);
-  } else {
-    console.log("Setting content");
-    vrView.setContent(params);
-  }
-}
-
-function switchVideo(video_fn, video_type) {
-  sts.cantChangeVideo = true;
-  var last_video_fn = sts.specs.current_video_fn;
-  params = {};
-
-  if (video_fn.indexOf("invasion") > -1) {
-      params.is_stereo = true;
-  } else {
-      params.is_stereo = false;
-  }
-
-  if (video_type === "background") {
-    console.log("Switched to background");
-    sts.specs.current_video_fn = video_fn;
-
-    params.video = video_fn;
-    if (video_fn.indexOf("#t=") < 0) {
-      params.video = video_fn + "#t=" + 0;
-    } 
-    params.default_yaw_radians = sts.theta.current ;
-
-    console.log(params);
-    setContentOrSeek(params, last_video_fn, params.video);
-    playButton.classList.remove('paused');
-
-  } else if (video_type === "main") {
-
-    console.log("Switched to main");
-    sts.specs.current_video_fn = video_fn;
-    params.video = video_fn + "#t=" + sts.currentTime;
-    params.default_yaw_radians = sts.theta.current;
-
-    console.log(params);
-    setContentOrSeek(params, last_video_fn, params.video);
-    playButton.classList.remove('paused');
-  } 
-  setTimeout(function(){
-    sts.cantChangeVideo = false;
-  }, 1000)
-}
-
-function isThetaInBoundary(cur_theta, imp_theta, poffset){
-  var left_bound = imp_theta - poffset;
-  var right_bound = imp_theta + poffset;
-
-  var within_imp_to_left_bound = cur_theta > left_bound && cur_theta <= imp_theta;
-  var within_imp_to_right_bound = cur_theta < right_bound && cur_theta >= imp_theta;
-
-  if (left_bound < circle_low) {
-    var adj_left_bound = circle_high - (circle_low - left_bound);
-    within_imp_to_left_bound = cur_theta > adj_left_bound || cur_theta <= imp_theta;
-  } 
-
-  if (right_bound > circle_high) {
-    var adj_right_bound = circle_low + (right_bound - circle_high);
-    within_imp_to_right_bound = cur_theta >= imp_theta || cur_theta < adj_right_bound;
-  }
-
-  if (within_imp_to_right_bound || within_imp_to_left_bound) {
-    return true;
-  } 
-  return false;
-}
-
-function withinAnyBoundary(){
-  // get the possible orientations
-  var orientations = sts.specs.possible_orientations;
-  var current_orientation = sts.theta.current;
-  var possible_offset = Math.PI/PI_DENOMINATOR; // TODO make customizable
-  var within_one_boundary = false;
-
-  // we're only going to restrict this if there are orientations
-  if (orientations && orientations.length > 0) {
-    for (var i = 0; i < orientations.length; i++) {
-        var orient = orientations[i];
-        // only set if not already true
-        within_one_boundary = isThetaInBoundary(current_orientation, orient, possible_offset) || within_one_boundary;
-    };
-  } else {
-    within_one_boundary = true;
-  }
-  return within_one_boundary;
-}
-
-function changeVideoBasedOnOrientation(){
-  var within_one_boundary = withinAnyBoundary();
-
-  // if we're in the boundary and not playing the main video
-  // switch to the main video
-  if (within_one_boundary 
-    && sts.specs.current_video_fn !== sts.specs.video_fn
-    && !sts.cantChangeVideo) {
-    switchVideo(sts.specs.video_fn, "main");
-
-  // if we're outside of the boundary and not playing the background video
-  // switch to the background video
-  } else if (!within_one_boundary
-    && sts.specs.background_video_fn // we need to actually have one specified though
-    && sts.specs.current_video_fn !== sts.specs.background_video_fn
-    && !sts.cantChangeVideo) {
-    switchVideo(sts.specs.background_video_fn, "background");
-
-  }
-  sts.current_theta_dirty = false;
-  sts.specs.possible_orientations_dirty = false;
-}
-
-function changeShotBasedOnHistoryOrPause() {
-  var history_criteria = (lookedInAllDirections() && sts.cuts.history_shot_change);
-  var pause_criteria = (pausedLookingAround() && sts.cuts.pause_shot_change);
-
-  if (sts.cuts.current_shot.i !== null 
-    && (history_criteria || pause_criteria)
-    && sts.cuts.current_shot.i !== sts.specs.playback.shots.length - 1
-    && sts.cuts.current_shot.can_cut) {
-    var next_shot = sts.specs.playback.shots.filter(function(s){
-      return s.i === sts.cuts.current_shot.i + 1;
-    });
-    if (next_shot.length > 0) {
-      seek(next_shot[0].start);
-      recordInteraction("onHistoryOrPauseCut", "shotNumber-" + next_shot[0].i);
-    }
-  }
-}
-
-// function changeShotBasedOnHistoryOrPause() {
-//   // for now we're just going to jump to the main shot
-//   // if we're in establishing shot and meets criteria
-//   var history_criteria = (lookedInAllDirections() && sts.cuts.history_shot_change);
-//   var pause_criteria = (pausedLookingAround() && sts.cuts.pause_shot_change);
-
-//   if (sts.cuts.current_shot.name === "establishing-shot"
-//     && (history_criteria || pause_criteria)) {
-//     var main_shot = sts.specs.playback.shots.filter(function(s){
-//       return s.name === "main";
-//     });
-//     if (main_shot.length > 0) {
-//       seek(main_shot[0].start);
-//     }
-//   }
-// } 
-
-function filterBasedOnOrientationInteractions(){
-  var orientation_information_is_changed = sts.specs.possible_orientations_dirty || sts.current_theta_dirty;
-
-  if (sts.specs.mode === "optional_cuts") {
-    // orientation change options
-    if (sts.specs.orientationpause && orientation_information_is_changed) {
-      playOrPauseBasedOnOrientation();
-    } else if (sts.specs.orientationvideochange && orientation_information_is_changed) {
-      changeVideoBasedOnOrientation();
-    }
-
-    // shot change options
-    if (sts.specs.playback && sts.specs.playback.shots 
-      && sts.cuts.pause_shot_change || sts.cuts.history_shot_change) {
-      changeShotBasedOnHistoryOrPause();
-    }
-  } 
-}
-
 function stopPlayingVideoIfNeeded(){
     var stopPlaying = false;
     if (sts.currentTime >= sts.specs.video_end_time
@@ -1131,27 +718,6 @@ function stopPlayingVideoIfNeeded(){
     }
 }
 
-function playOrPauseBasedOnOrientation() {
-  var within_one_boundary = withinAnyBoundary();
-
-  // console.log("Within one boundary: " + within_one_boundary);
-  // console.log("pausedFromOrientation: " + sts.pausedFromOrientation);
-  // console.log("isPaused " + vrView.isPaused);
-
-  if (within_one_boundary
-    && sts.pausedFromOrientation 
-    && vrView.isPaused) {
-    onTogglePlay();
-    sts.pausedFromOrientation = false;
-
-  } else if (!within_one_boundary && !vrView.isPaused) {
-    onTogglePlay();
-    sts.pausedFromOrientation = true; 
-  }
-  sts.current_theta_dirty = false;
-  sts.specs.possible_orientations_dirty = false;
-}
-
 function listenForCurrentTime() {
   // we need to listen for events
   iframe = getIframedocument();
@@ -1168,9 +734,6 @@ function listenForCurrentTime() {
       // console.log(sts.currentTime + ", "  + sts.theta.current + ", " + sts.specs.current_video_fn);
       sts.currentTime = e.detail;
 
-      if (sts.specs.subtitles && sts.specs.playback) {
-        updateSubtitle();
-      }
       if (sts.timeline) {
         updateTimeline();
         $('#currentTime').text(sts.currentTime);
@@ -1179,13 +742,7 @@ function listenForCurrentTime() {
         updateShot();
       }
       updateOrientationOptions();
-      filterBasedOnOrientationInteractions();
-
-      // HACKY FIX TO STOP VIDEO FROM LOOPING - fix me pls
-      // if (sts.currentTime >= sts.specs.duration - .5 
-      //   && sts.specs.study && !sts.playthrough) { 
-      //   stopPlayingVideo();
-      // } else if () {}
+      // filterBasedOnOrientationInteractions();
       stopPlayingVideoIfNeeded();
     }
   });
@@ -1208,7 +765,7 @@ function listenForCurrentTime() {
       sts.theta.current = new_theta;
       
       sts.current_theta_dirty = true;
-      filterBasedOnOrientationInteractions();
+      // filterBasedOnOrientationInteractions();
     }
   });
 
@@ -1295,28 +852,6 @@ function advanceOrientation(){
   }
 }
 
-// function onToggleOrientation() {
-//   var orientations = sts.specs.possible_orientations;
-//   var i = parseInt(sts.specs.next_orientation_i);
-//   if (orientations.length > 0 && i !== undefined) {
-//     var orientation = orientations[i];
-
-//     var j = 0;
-//     while (j <= orientations.length 
-//         && (sts.theta.current + TOGGLE_ORIENTATION_OFFSET > orientation
-//           && sts.theta.current - TOGGLE_ORIENTATION_OFFSET < orientation)) {
-//       advanceOrientation();
-//       j++;
-//     }
-
-//     // set orientation to the next orientation
-//     var new_i = parseInt(sts.specs.next_orientation_i);
-//     vrView.setOrientation(orientations[new_i]); 
-//     recordInteraction("onToggleOrientation", orientations[new_i]);
-
-//   }
-// }
-
 function onToggleOrientation() {
   var orientations = sts.specs.possible_orientations;
   var i = parseInt(sts.specs.next_orientation_i);
@@ -1402,75 +937,6 @@ function onToggleRegularCuts() {
 function onToggleHybridCuts() {
   onToggleForcedCuts();
   $(orientationButton).removeClass("disabled");
-}
-
-function onToggleRegularTitles() {
-  if (!sts.cuts.regular_titles) { 
-    sts.cuts.regular_titles = true;
-    $(regulartitlesButton).text("Turn off regular titles");
-  } else {
-    sts.cuts.regular_titles = false;
-    $(regulartitlesButton).text("Turn on regular titles");
-  }
-}
-
-function onTogglePauseShotChange() {
-  if (!sts.cuts.pause_shot_change) { 
-    sts.cuts.pause_shot_change = true;
-    $(pauseshotchangeButton).text("Turn off pause shot change");
-  } else {
-    sts.cuts.pause_shot_change = false;
-    $(pauseshotchangeButton).text("Turn on pause shot change");
-  }
-}
-
-function onToggleHistoryShotChange() {
-  if (!sts.cuts.history_shot_change) { 
-    sts.cuts.history_shot_change = true;
-    $(historyshotchangeButton).text("Turn off history shot change");
-  } else {
-    sts.cuts.history_shot_change = false;
-    $(historyshotchangeButton).text("Turn on history shot change");
-  }
-}
-
-function onToggleOrientationPause() {
-
-  if (sts.specs.orientationpause === true) {
-    sts.specs.orientationpause = false;
-    console.log("orientation pause is false");
-    $(orientationPauseButton).text("Turn on orientation pause");
-
-  } else {
-    sts.specs.orientationpause = true;
-    console.log("orientation pause is true");
-    $(orientationPauseButton).text("Turn off orientation pause");
-  }
-}
-
-function onToggleOrientationVideoChange() {
-
-  if (sts.specs.orientationvideochange === true) {
-    sts.specs.orientationvideochange = false;
-    console.log("orientation video change is false");
-    $(orientationVideoChangeButton).text("Turn on orientation video change");
-
-  } else {
-    sts.specs.orientationvideochange = true;
-    console.log("orientation video change is true");
-    $(orientationVideoChangeButton).text("Turn off orientation video change");
-  }
-}
-
-function onToggleSubtitles() {
-  if (sts.specs.subtitles) {
-    $(subtitlesButton).text("Turn on subtitles");
-    sts.specs.subtitles = false;
-    vrView.subtitle(sts.current_subtitle);
-  } else {
-    $(subtitlesButton).text("Turn off subtitles");
-    sts.specs.subtitles = true;
-  }
 }
 
 window.addEventListener('load', onLoad);
