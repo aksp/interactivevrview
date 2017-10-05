@@ -6,7 +6,7 @@ Running the interactive 360 video player
 =======
 First, clone the repo. 
 
-Next, you'll need a simple webserver. At a minimum it should support partial range requests (e.g., to support seek by loading only part of the video at a time). You can see if a server supports partial range requests by following [these instructions](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests#Checking_if_a_server_supports_partial_requests). Here are two options:
+Next, you will need a simple webserver. At a minimum it should support partial range requests (e.g., to support seek by loading only part of the video at a time). You can see if a server supports partial range requests by following [these instructions](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests#Checking_if_a_server_supports_partial_requests). Here are two options:
 
 * **Using http-server:** If you already have `npm` then Node's [http-server](https://www.npmjs.com/package/http-server) is an easy-to-install server that supports partial range requests. To run the interactive 360 video player using Node's http-server:
 	* `cd` into the repo directory
@@ -15,7 +15,7 @@ Next, you'll need a simple webserver. At a minimum it should support partial ran
 	* Record the address provided (for example 127.0.0.1:8080) 
 	* Open a browser window and visit http://127.0.0.1:8080/examples/interactivevideo/interface-demo.html to run the online demo (see [here](https://people.eecs.berkeley.edu/~amypavel/vrview/examples/orientations/interface-demo.html))
 
-* **Using MAMP:** If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you'll need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server. Add the cloned repo to the `Applications/MAMP/htdocs/' folder and visit 'http://localhost:8888/interactivevrview/examples/interactivevideo/interface-demo.html' to run the demo.
+* **Using MAMP:** If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you will need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server. Add the cloned repo to the `Applications/MAMP/htdocs/' folder and visit 'http://localhost:8888/interactivevrview/examples/interactivevideo/interface-demo.html' to run the demo.
 
 The videos within the demo will not work yet. To display a video with viewpoint-oriented cuts or active reorientation the system needs two files: a specification file to specify cut times and important points, and a corresponding mp4 video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json') but it does not contain the required corresponding video. To add the video: 
 	* Make this directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) 
