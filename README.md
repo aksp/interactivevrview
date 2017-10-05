@@ -17,10 +17,10 @@ Next, you will need a simple webserver. At a minimum it should support partial r
 
 * **Using MAMP:** If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you will need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server. Add the cloned repo to the `Applications/MAMP/htdocs/` folder and visit `http://localhost:8888/interactivevrview/examples/interactivevideo/interface-demo.html` to run the demo.
 
-The videos within the demo will not work yet. To display a video with viewpoint-oriented cuts or active reorientation the system needs two files: a specification file to specify cut times and important points, and a corresponding mp4 video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json`) but it does not contain the required corresponding video. To add the video: 
-	* Make this directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) 
-	* Download the trees video that can be found on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s)
-	* Title the video `trees.mp4` and save it to the created video directory 
+The videos within the demo will not work yet. To display a video with viewpoint-oriented cuts or active reorientation the system needs two files: a specification file to specify cut times and important points, and a corresponding mp4 video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json`) but it does not contain the required corresponding video. To add the video:
+* Make this directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) 
+* Download the trees video that can be found on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s)
+* Title the video `trees.mp4` and save it to the created video directory 
 
 You can now view the trees demo by selecting "Trees" on the interface-demo.html dropdown, then choosing from any technique (e.g., viewpoint-oriented, active, hybrid, fixed). 
 
