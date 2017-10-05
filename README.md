@@ -1,3 +1,7 @@
+This repo contains code for the project Shot Orientation Controls for Interactive 360 Degree Cinematography. See the project page [here](https://aksp.github.io/interactive360video/).
+
+If you have any questions about the repo or project contact Amy Pavel at amypavel@berkeley.edu.
+
 Running the interactive 360 video player
 =======
 First, clone the repo. 
@@ -17,6 +21,12 @@ Next, you'll need a simple webserver. At a minimum it should support partial ran
 	* Make this directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) 
 	* Download the trees video that can be found on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s)
 	* Title the video `trees.mp4` and save it to the created video directory 
+
+Authoring a new interactive 360 degree video
+=======
+After downloading the video `your-video.mp4` and adding it to the folder `interactivevrview/examples/interactivevideo/videos/`, you will need to manually add cuts and important orientations. To do this, you can create the JSON by hand, or use our bare-bones labeling interface.
+
+To use the labeling interface, start the webserver as above and visit `http://your-webserver-address/examples/interactivevideo/index.html?f=videos/your-video.mp4`. Navigate the video by using the timeline or the left and right arrow keys. When you have reached a cut point and you have dragged to an important orientation, press `o` to mark the cut (and the first important orientation). Press `m` to mark subsequent important orientations on the same frame. After you have finished marking cut times and orientations, press `s` to output the JSON to the javascript console. You can copy and paste the outputted JSON string to a file called `interactivevrview/examples/interactivevideo/demo-spec-files/your-video.json`. Then, you can see your video by visiting the relevant demo page directly. For instance, for viewpoint-oriented cuts, visit `http://your-webserver-address/examples/interactivevideo/demo.html?f=demo-spec-files/your-video.json&opts=forcedcuts`. 
 
 API calls
 =======
