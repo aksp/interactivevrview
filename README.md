@@ -15,9 +15,9 @@ Next, you will need a simple webserver. At a minimum it should support partial r
 	* Record the address provided (for example 127.0.0.1:8080) 
 	* Open a browser window and visit http://127.0.0.1:8080/examples/interactivevideo/interface-demo.html to run the online demo (see [here](https://people.eecs.berkeley.edu/~amypavel/vrview/examples/orientations/interface-demo.html))
 
-* **Using MAMP:** If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you will need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server. Add the cloned repo to the `Applications/MAMP/htdocs/' folder and visit 'http://localhost:8888/interactivevrview/examples/interactivevideo/interface-demo.html' to run the demo.
+* **Using MAMP:** If you do not have `npm` or ou would like to be able to record or save data from viewing sessions (e.g., head orientation and interactions), you will need a different server because `http-server` does not support POST requests. A local Apache web server works well, and [MAMP](https://www.mamp.info/en/) is an easy way to run an Apache server. Add the cloned repo to the `Applications/MAMP/htdocs/` folder and visit `http://localhost:8888/interactivevrview/examples/interactivevideo/interface-demo.html` to run the demo.
 
-The videos within the demo will not work yet. To display a video with viewpoint-oriented cuts or active reorientation the system needs two files: a specification file to specify cut times and important points, and a corresponding mp4 video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json') but it does not contain the required corresponding video. To add the video: 
+The videos within the demo will not work yet. To display a video with viewpoint-oriented cuts or active reorientation the system needs two files: a specification file to specify cut times and important points, and a corresponding mp4 video file. The repo contains one specification file (`interactivevrview/examples/interactivevideo/demo-spec-files/trees.json`) but it does not contain the required corresponding video. To add the video: 
 	* Make this directory for videos (`mkdir interactivevrview/examples/interactivevideo/videos/`) 
 	* Download the trees video that can be found on YouTube [here](https://www.youtube.com/watch?v=f7wTolIlK_s)
 	* Title the video `trees.mp4` and save it to the created video directory 
@@ -28,8 +28,8 @@ Authoring a new interactive 360 degree video
 =======
 Now that you have the video player up and running you can view any 360 video using the system. To view a video file using the technique, you will need to add the video file to the system, and add a new specification file. 
 
-* Add the video ('my-video.mp4') to the server in the folder `interactivevrview/examples/interactivevideo/videos/` 
-* To create a JSON specification file from scratch, use the same format as in 'trees.json' and change the video filenames, the shot times (e.g., "start" and "end" for each shot), and the important points per shot (e.g., "orientations") in order of importance. Add the JSON file to the existing folder `demo-spec-files/'.
+* Add the video (`my-video.mp4`) to the server in the folder `interactivevrview/examples/interactivevideo/videos/` 
+* To create a JSON specification file from scratch, use the same format as in `trees.json` and change the video filenames, the shot times (e.g., "start" and "end" for each shot), and the important points per shot (e.g., "orientations") in order of importance. Add the JSON file to the existing folder `demo-spec-files/'.
 * To create a JSON specification file using our (ugly but functional) labeling interface
 	* Start the webserver as above and visit `http://<webserver-address>/examples/interactivevideo/index.html?f=videos/<my-video.mp4>`. 
 	* Navigate the video by using the timeline or the left and right arrow keys. 
